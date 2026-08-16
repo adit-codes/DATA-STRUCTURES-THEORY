@@ -1,0 +1,110 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+typedef struct {
+    int *val;
+    int top;
+    int capacity;
+} STACK;
+
+// Initialize stack
+STACK createStack(int initialCapacity) {
+    STACK s;
+    s.capacity = initialCapacity;
+    s.top = 0; // 0-indexed top count as in slide 16
+    s.val = (int *)malloc((initialCapacity + 1) * sizeof(int));
+    return s;
+}
+
+// 1. Size of a stack
+int size(STACK s) {
+    return s.top;
+}
+
+bool push(STACK *s, int data) {
+    if (s->top == s->capacity) return false;
+    s->top++;
+    s->val[s->top] = data;
+    return true;
+}
+
+bool pop(STACK *s, int *data) {
+    if (s->top == 0) return false;
+    *data = s->val[s->top];
+    s->top--;
+    return true;
+}
+
+// 2. Two stacks are equal or not
+bool areEqual(STACK s1, STACK s2) {
+    if (s1.top != s2.top) return false;
+    for (int i = 1; i <= s1.top; i++) {
+        if (s1.val[i] != s2.val[i]) return false;
+    }
+    return true;
+}
+
+// 3. Copy of a stack
+STACK copyStack(STACK source) {
+    STACK copy = createStack(source.capacity);
+    copy.top = source.top;
+    for (int i = 1; i <= source.top; i++) {
+        copy.val[i] = source.val[i];
+    }
+    return copy;
+}
+
+// 4. Doubling the MAX size of the stack
+void doubleCapacity(STACK *s) {
+    s->capacity *= 2;
+    s->val = (int *)realloc(s->val, (s->capacity + 1) * sizeof(int));
+}
+
+// 5. Reverse of a stack so top becomes bottom
+void reverseStack(STACK *s) {
+    int start = 1;
+    int end = s->top;
+    while (start < end) {
+        int temp = s->val[start];
+        s->val[start] = s->val[end];
+        s->val[end] = temp;
+        start++;
+        end--;
+    }
+}
+
+void printStack(STACK s) {
+    printf("Stack (Bottom to Top): ");
+    for (int i = 1; i <= s.top; i++) {
+        printf("%d ", s.val[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    STACK s1 = createStack(4);
+    push(&s1, 10);
+    push(&s1, 20);
+    push(&s1, 30);
+    
+    printf("Size of stack: %d\n", size(s1));
+    printStack(s1);
+
+    // Copy stack
+    STACK s2 = copyStack(s1);
+    printf("Are s1 and s2 equal? %s\n", areEqual(s1, s2) ? "Yes" : "No");
+
+    // Reverse stack
+    reverseStack(&s1);
+    printf("After reversing s1:\n");
+    printStack(s1);
+
+    // Double capacity
+    doubleCapacity(&s1);
+    printf("New Capacity: %d\n", s1.capacity);
+
+    free(s1.val);
+    free(s2.val);
+    return 0;
+}
