@@ -1,0 +1,77 @@
+#include <stdio.stdio.h>
+
+#define MAX 4
+typedef int BOOL;
+
+// Definition of the STACK structure
+typedef struct {
+    int val[MAX + 1];
+    int top;
+} STACK;
+
+// Initializing stack object
+STACK createStack() {
+    STACK ss;
+    ss.top = 0;
+    return ss;
+}
+
+// Testing Emptiness
+BOOL isEmpty(STACK s) {
+    if (s.top == 0) return 1;
+    return 0;
+}
+
+// Testing Full Stack
+BOOL isFull(STACK s) {
+    if (s.top == MAX) return 1;
+    return 0;
+}
+
+// Push on Stack
+BOOL push(STACK *s, int data) {
+    if (isFull(*s)) return 0;
+    s->top = s->top + 1;
+    s->val[s->top] = data;
+    return 1;
+}
+
+// Read from Top
+int peep(STACK s) {
+    if (isEmpty(s)) return -1;
+    return s.val[s.top];
+}
+
+// Pop from Stack
+BOOL pop(STACK *s, int *data) {
+    if (isEmpty(*s)) return 0;
+    *data = s->val[s->top];
+    s->top = s->top - 1;
+    return 1;
+}
+
+int main() {
+    // Declaration of stack object
+    STACK s;
+    s = createStack();
+
+    int poppedValue;
+
+    // Example Pushes
+    push(&s, 10); // Push A
+    push(&s, 20); // Push B
+    push(&s, 30); // Push C
+
+    printf("Top element (peep): %d\n", peep(s));
+
+    // Example Pops
+    if (pop(&s, &poppedValue)) {
+        printf("Popped: %d\n", poppedValue);
+    }
+
+    if (pop(&s, &poppedValue)) {
+        printf("Popped: %d\n", poppedValue);
+    }
+
+    return 0;
+}
